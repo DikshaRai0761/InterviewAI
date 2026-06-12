@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL: "https://interviewai-n9bj.onrender.com",
     withCredentials: true,
 })
-
 
 /**
  * @description Service to generate interview report based on user self description, resume and job description.
@@ -12,9 +11,13 @@ const api = axios.create({
 export const generateInterviewReport = async ({ jobDescription, selfDescription, resumeFile }) => {
 
     const formData = new FormData()
+
     formData.append("jobDescription", jobDescription)
     formData.append("selfDescription", selfDescription)
-    formData.append("resume", resumeFile)
+
+    if (resumeFile) {
+        formData.append("resume", resumeFile)
+    }
 
     const response = await api.post("/api/interview/", formData, {
         headers: {
@@ -23,7 +26,6 @@ export const generateInterviewReport = async ({ jobDescription, selfDescription,
     })
 
     return response.data
-
 }
 
 
@@ -31,7 +33,10 @@ export const generateInterviewReport = async ({ jobDescription, selfDescription,
  * @description Service to get interview report by interviewId.
  */
 export const getInterviewReportById = async (interviewId) => {
-    const response = await api.get(`/api/interview/report/${interviewId}`)
+
+    const response = await api.get(
+        `/api/interview/report/${interviewId}`
+    )
 
     return response.data
 }
@@ -41,6 +46,7 @@ export const getInterviewReportById = async (interviewId) => {
  * @description Service to get all interview reports of logged in user.
  */
 export const getAllInterviewReports = async () => {
+
     const response = await api.get("/api/interview/")
 
     return response.data
@@ -51,9 +57,14 @@ export const getAllInterviewReports = async () => {
  * @description Service to generate resume pdf based on user self description, resume content and job description.
  */
 export const generateResumePdf = async ({ interviewReportId }) => {
-    const response = await api.post(`/api/interview/resume/pdf/${interviewReportId}`, null, {
-        responseType: "blob"
-    })
+
+    const response = await api.post(
+        `/api/interview/resume/pdf/${interviewReportId}`,
+        null,
+        {
+            responseType: "blob"
+        }
+    )
 
     return response.data
 }
