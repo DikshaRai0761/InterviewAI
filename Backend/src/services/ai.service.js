@@ -64,7 +64,6 @@ async function generatePdfFromHtml(htmlContent) {
     executablePath: await chromium.executablePath(),
     headless: true,
 });
-
     const page = await browser.newPage();
 
     await page.setContent(htmlContent, {
